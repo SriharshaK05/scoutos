@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean, Date, ForeignKey
+from sqlalchemy import Column, Integer, String, Boolean, Date, ForeignKey, Float
 from sqlalchemy.orm import relationship
 from app.models.base import Base
 
@@ -41,3 +41,17 @@ class PlayerSeason(Base):
 
     player = relationship("Player", back_populates="seasons")
     team = relationship("Team", back_populates="player_seasons")
+
+class PlayerFeature(Base):
+    __tablename__ = "player_features"
+
+    id = Column(Integer, primary_key=True, index=True)
+    player_season_id = Column(Integer, ForeignKey("player_seasons.id"), unique=True, nullable=False)
+
+    # Per Game Metrics
+    mpg = Column(Float, default=0.0)
+    ppg = Column(Float, default=0.0)
+    apg = Column(Float, default=0.0)
+    rpg = Column(Float, default=0.0)
+
+    season = relationship("PlayerSeason", backref="features")
